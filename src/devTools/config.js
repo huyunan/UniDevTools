@@ -11,7 +11,7 @@ let config = {
   // 注意： 以下配置不建议更改
 
   pageStatistics: {// 页面统计开关
-    status: true, // 统计状态开关
+    status: false, // 统计状态开关
     size: 1024 * 100, // 缓存上限，单位byte
     dayOnlineRowMax: 30, // 活跃数据缓存天数
   },
@@ -25,7 +25,7 @@ let config = {
     },
   },
   uniBus: { // uni event bus 监听设置
-    status: true,
+    status: false,
     cache: {
       status: true,
       size: 1024 * 512, // bus调用日志上限 byte
@@ -42,7 +42,7 @@ let config = {
     },
   },
   network: { //请求拦截配置
-    status: true,
+    status: false,
     cache: {
       status: true,
       size: 512 * 1024,
@@ -50,7 +50,7 @@ let config = {
     },
   },
   logs: { //运行日志
-    status: true,
+    status: false,
     cache: {
       status: true,
       size: 512 * 1024,

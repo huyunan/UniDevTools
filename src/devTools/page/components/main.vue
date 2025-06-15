@@ -57,23 +57,24 @@
           :show-scrollbar="false"
         >
           <view style="display: flex; flex-direction: row">
-            <view
-              v-for="(item, index) in tabList"
-              :key="index"
-              class="tabItem"
-              @click="tabIndex = index"
-            >
-              <text
-                class="tabText"
-                :class="index == tabIndex ? 'active' : ''"
-              >
-                {{ item.title }}
-              </text>
+            <template v-for="(item, index) in tabList" :key="index">
               <view
-                class="tabLine"
-                v-if="index == tabIndex"
-              ></view>
-            </view>
+                v-if="item.show"
+                class="tabItem"
+                @click="tabIndex = index"
+              >
+                <text
+                  class="tabText"
+                  :class="index == tabIndex ? 'active' : ''"
+                >
+                  {{ item.title }}
+                </text>
+                <view
+                  class="tabLine"
+                  v-if="index == tabIndex"
+                ></view>
+              </view>
+            </template>
           </view>
         </scroll-view>
         <view
@@ -96,7 +97,8 @@
         ref="mobileSwiperScroll"
       >
         <template #default="{ item, index }">
-          <template v-if="item.title == 'Tools'">
+          {{ item.title }}|{{ item.show }}
+          <template v-if="item.title == 'Tools' && item.show">
             <cell>
               <tools
                 ref="tools"
@@ -104,7 +106,7 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Error'">
+          <template v-if="item.title == 'Error' && item.show">
             <cell
               v-for="(_item, _index) in item.data"
               :key="_index"
@@ -115,7 +117,7 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Console'">
+          <template v-if="item.title == 'Console' && item.show">
             <cell
               v-for="(_item, _index) in item.data"
               :key="_index"
@@ -126,7 +128,7 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Network'">
+          <template v-if="item.title == 'Network' && item.show">
             <cell
               v-for="(_item, _index) in item.data"
               :key="_index"
@@ -139,12 +141,12 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Storage'">
+          <template v-if="item.title == 'Storage' && item.show">
             <cell>
               <storageList ref="storageList" />
             </cell>
           </template>
-          <template v-if="item.title == 'Pages'">
+          <template v-if="item.title == 'Pages' && item.show">
             <cell>
               <subTitleBar
                 :isOpen="item.isShowPages"
@@ -223,7 +225,7 @@
               <view class="cellDivisionLine"></view>
             </cell>
           </template>
-          <template v-if="item.title == 'Vuex'">
+          <template v-if="item.title == 'Vuex' && item.show">
             <cell>
               <vuexList
                 ref="vuexList"
@@ -231,7 +233,7 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Logs'">
+          <template v-if="item.title == 'Logs' && item.show">
             <cell
               v-for="(_item, _index) in item.data"
               :key="_index"
@@ -242,12 +244,12 @@
               />
             </cell>
           </template>
-          <template v-if="item.title == 'Info'">
+          <template v-if="item.title == 'Info' && item.show">
             <cell>
               <infoList ref="infoList" />
             </cell>
           </template>
-          <template v-if="item.title == 'UniBus'">
+          <template v-if="item.title == 'UniBus' && item.show">
             <cell>
               <subTitleBar
                 :isOpen="item.isShowCount"
@@ -322,7 +324,7 @@
               <view class="cellDivisionLine"></view>
             </cell>
           </template>
-          <template v-if="item.title == 'FileSys'">
+          <template v-if="item.title == 'FileSys' && item.show">
             <!-- #ifdef APP-PLUS || MP-WEIXIN -->
             <cell
               v-for="(_item, _index) in item.data"
@@ -353,13 +355,13 @@
             </cell>
             <!-- #endif -->
           </template>
-          <template v-if="item.title == 'Setting'">
+          <template v-if="item.title == 'Setting' && item.show">
             <cell>
               <settingView ref="settingView" />
             </cell>
           </template>
 
-          <template v-if="item.title == 'JsRunner'">
+          <template v-if="item.title == 'JsRunner' && item.show">
             <!-- #ifdef APP-PLUS || H5 -->
             <cell
               v-for="(_item, _index) in item.data"
@@ -560,11 +562,12 @@ export default {
       isDialog: true,
 
       tabLoading: true,
-      tabIndex: 0,
+      tabIndex: 1,
       tabList: [
         {
           title: "Tools", //标题
           hasLoad: false,
+          show: false, //是否显示
         },
         {
           title: "Error", //标题
@@ -578,6 +581,7 @@ export default {
           isLoadAll: false, //是否加载全部
           filterType: "", //过滤类型
           isShowBottomTools: true, //显示底部工具栏
+          show: true, //是否显示
         },
         {
           title: "Console", //标题
@@ -591,6 +595,7 @@ export default {
           isLoadAll: false, //是否加载全部
           filterType: "", //过滤类型
           isShowBottomTools: true, //显示底部工具栏
+          show: true, //是否显示
         },
         {
           title: "Network", //标题
@@ -604,6 +609,7 @@ export default {
           isLoadAll: false, //是否加载全部
           filterType: "", //过滤类型
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "JsRunner", //标题
@@ -616,6 +622,7 @@ export default {
           // #ifdef APP-PLUS || H5
           isShowBottomTools: true, //显示底部工具栏
           // #endif
+          show: false, //是否显示
         },
         {
           title: "Storage", //标题
@@ -625,6 +632,7 @@ export default {
           hasLoad: false,
           storageType: "localStorage", //缓存类型默认为localStorage
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "Pages", //标题
@@ -640,6 +648,7 @@ export default {
           isShowBottomTools: true, //显示底部工具栏
           isShowRouteList: false, // 是否显示路由列表
           routeList: [], //全部路由列表
+          show: false, //是否显示
         },
         {
           title: "Vuex", //标题
@@ -649,6 +658,7 @@ export default {
           hasLoad: false,
           stateType: "vuex", //全局变量类型 vuex pinia globalData
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "Logs", //标题
@@ -662,6 +672,7 @@ export default {
           isLoadAll: false, //是否加载全部
           isLongList: true, // 是否长列表
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "Info", //标题
@@ -669,6 +680,7 @@ export default {
           isRefreshing: false, //下拉刷新状态
           refreshType: "waitPullUp", //刷新状态 'waitPullUp','waitRelease','refreshing'
           hasLoad: false,
+          show: false, //是否显示
         },
         {
           title: "UniBus", //标题
@@ -683,6 +695,7 @@ export default {
           filterType: "", //过滤类型
           hasLoad: false,
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "FileSys", //标题
@@ -700,6 +713,7 @@ export default {
           dirList: [], //目录列表
           hasLoad: false,
           isShowBottomTools: true, //显示底部工具栏
+          show: false, //是否显示
         },
         {
           title: "Setting", //标题
@@ -710,6 +724,7 @@ export default {
           data: [], //数据条数
           page: 0, //当前页码
           hasLoad: false,
+          show: true, //是否显示
         },
       ],
     };
@@ -785,7 +800,7 @@ export default {
     isShowBottomTools() {
       // [1, 2, 3, 4, 5, 7, 9, 10].indexOf(tabIndex) != -1
       let item = this.tabList[this.tabIndex];
-      return item.isShowBottomTools === true;
+      return item.show && item.isShowBottomTools === true;
     },
     /**
      * 面板样式
@@ -889,7 +904,8 @@ export default {
 
       await that.awaitNextTick();
 
-      if (item.title == "Storage") {
+      if (!item.show) {}
+      else if (item.title == "Storage") {
         that.refreshStorage();
       } else if (item.title == "Vuex") {
         that.refreshVuex();
