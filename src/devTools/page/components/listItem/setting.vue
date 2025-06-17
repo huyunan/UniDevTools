@@ -70,6 +70,57 @@
         </view>
       </template>
       <view class="divisionLine"></view>
+      
+      <subTitleBar
+        :isOpen="panelListIsShow"
+        title="设置面板显示"
+        @click="panelListIsShow = !panelListIsShow"
+      />
+      <template v-if="panelListIsShow">
+        <checkbox-group @change="setSelectPanel">
+        <view
+          v-for="(item, index) in cacheSelectList"
+          :key="index"
+          @click.stop="setSelectPanel(index)"
+          class="checkboxItem"
+        >
+          <checkbox
+            :value="item.check ? '1' : '0'"
+            :checked="item.check"
+            color="#ff2d55"
+          />
+          <text
+            class="name"
+            :style="{
+              color: item.count ? '#333' : '#888',
+            }"
+          >
+            {{ item.name }}
+          </text>
+
+          <text v-if="item.key == 'file'"></text>
+          <text
+            v-else-if="item.count"
+            class="count"
+          >
+            ({{ item.count }})
+          </text>
+          <text
+            v-else
+            class="empty"
+          >
+            (空)
+          </text>
+        </view>
+        </checkbox-group>
+        <view
+          class="delBtn"
+          @click="delCache"
+        >
+          <text class="delBtnText">清空选中</text>
+        </view>
+      </template>
+      <view class="divisionLine"></view>
 
       <subTitleBar
         :isOpen="configIsShow"
@@ -141,9 +192,17 @@ export default {
        */
       cacheListIsShow: false,
       /**
+       * 设置面板显示
+       */
+      panelListIsShow: false,
+      /**
        * 缓存列表
        */
       cacheSelectList: [],
+      /**
+       * 面板列表
+       */
+      panelSelectList: [],
       /**
        * 配置文件是否显示
        */
@@ -166,7 +225,68 @@ export default {
       let that = this;
       that.loading = true;
       that.cacheSelectList = await that.countCache();
+      that.panelSelectList = that.countPanel();
       that.loading = false;
+    },
+    /**
+     * 统计缓存信息
+     */
+    countPanel() {
+      const panelList = [
+        {
+          title: "Tools", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Error", //标题
+          show: true, //是否显示
+        },
+        {
+          title: "Console", //标题
+          show: true, //是否显示
+        },
+        {
+          title: "Network", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "JsRunner", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Storage", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Pages", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Vuex", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Logs", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Info", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "UniBus", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "FileSys", //标题
+          show: false, //是否显示
+        },
+        {
+          title: "Setting", //标题
+          show: true, //是否显示
+        },
+      ]
+      uni.getStorageSync('devTools_panel');
     },
     /**
      * 统计缓存信息
@@ -321,6 +441,12 @@ export default {
      */
     doSelectCache(index) {
       this.cacheSelectList[index].check = !this.cacheSelectList[index].check;
+    },
+    /**
+     * 选择清空的缓存项目
+     */
+    setSelectPanel(index) {
+      console.log('setSelectPanel', index)
     },
     /**
      * 清空缓存
